@@ -1,0 +1,31 @@
+body{
+  background-color: crimson;
+}
+#canvas{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-top: -225px;
+  margin-left: -300px;
+  background-color: black;
+}
+#scoreboard{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 580px;
+  height: 60px;
+  padding: 10px;
+  margin-top: 225px;
+  margin-left: -300px;
+  background-color: black;
+  color: white;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  border-style: solid;
+  border-width: 3px;
+}
+h1{
+  text-align: center;
+}

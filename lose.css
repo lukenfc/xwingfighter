@@ -1,0 +1,29 @@
+body{
+  background-color: crimson;
+}
+.menu{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-top: -225px;
+  margin-left: -300px;
+  width: 600px;
+  height: 450px;
+  background-color: black;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+h1{
+  color: white;
+}
+a{
+  padding: 10px;
+  margin: 5px;
+  border-style: solid;
+  border-color: white;
+  color: white;
+  text-decoration: none;
+  font-size: 20px;
+}
