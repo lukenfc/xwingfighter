@@ -12,7 +12,7 @@ var camera = {
 }
 var wing = {
   x: -90,
-  y: 100
+  y: 100,
 }
 var speed = 1000
 var xwing = new Image()
@@ -22,20 +22,24 @@ var down = false
 var left = false
 var right = false
 var score = 0
+var blasters = false
+var travel
 document.onkeydown = checkKeyDown
 document.onkeyup = checkKeyUp
 var vertices = []
 for(let i = 0; i < 5000; i++){
   var obj = {}
-  obj.x = 100*i + 300
-  obj.z = Math.floor(Math.random()*600) - 300
-  obj.y = Math.floor(Math.random()*450) - 225
+  obj.x = 400*i - 1000000
+  obj.z = Math.floor(Math.random()*1000) - 500
+  obj.y = Math.floor(Math.random()*800) - 400
   obj.red = Math.floor(Math.random()*256)
   obj.green = Math.floor(Math.random()*256)
   obj.blue = Math.floor(Math.random()*256)
   obj.width = Math.random()*3 + 3
+  obj.blasted = false
   vertices[i] = obj
 }
+var bullets = {}
 var timeOut
 var spin = setInterval(()=>{
   moveShip()
@@ -48,22 +52,28 @@ function draw(){
     var element = vertices[i]
     if(camera.x > element.x){
       var v = perceiveVertex(element)
-      ctx.fillStyle = 'white'
+      ctx.fillStyle = 'brown'
       ctx.fillRect(v.z,v.y,v.width,v.width)
+      if(blasters){
+        element.x += speed*2
+      }
+      else{
       element.x += speed
+      }
       if(v.z < wing.x + 160 && v.z + v.width > wing.x+20 && v.y + v.width > wing.y + 20 && v.y < wing.y+100 && element.x > 990000){
         endGame()
       }
     }
     else{
       var obj = {}
-      obj.x = 0
-      obj.z = Math.floor(Math.random()*600) - 300 + camera.z
-      obj.y = Math.floor(Math.random()*450) - 225 + camera.y
+      obj.x = -500000
+      obj.z = Math.floor(Math.random()*1000) - 500 + camera.z
+      obj.y = Math.floor(Math.random()*800) - 400 + camera.y
       obj.red = Math.floor(Math.random()*256)
       obj.green = Math.floor(Math.random()*256)
       obj.blue = Math.floor(Math.random()*256)
       obj.width = Math.random()*3 + 3
+      obj.blasted = false
       element = obj
       speed+= 0.1
       score += 1
@@ -74,6 +84,11 @@ function draw(){
     }
     vertices[i] = element
   }
+  // if(blasters){
+  //   var v = perceiveVertex(bullets)
+  //     ctx.fillStyle = 'blue'
+  //     ctx.fillRect(v.z,v.y,v.width,v.width)
+  // }
   ctx.drawImage(xwing,wing.x,wing.y,180,120)
 }
 
@@ -90,25 +105,36 @@ function moveShip(){
     if(wing.y > -200){
       wing.y -= 5
     }
-      camera.y -= .3
+    else{
+      camera.y -= .5
+    }
   }
   else if(down){
     if(wing.y < 100){
       wing.y += 5
     }
-      camera.y += .3
+    else{
+      camera.y += .5
+    }
   }
   if(left){
     if(wing.x > -275){
       wing.x -= 5
     }
-    camera.z -= .3
+    else{
+    camera.z -= .5
+    }
   }
   else if(right){
     if(wing.x < 115){
       wing.x += 5
     }
-    camera.z += .3
+    else{
+    camera.z += .5
+    }
+  }
+  if(blasters){
+    bullets.x -= 50
   }
 }
 
@@ -129,6 +155,9 @@ function checkKeyDown(e){
     down = true
     up = false
   }
+  else if(e.keyCode === 32){
+    blasters = true
+  }
 }
 function checkKeyUp(e){
   if(e.keyCode === 37){
@@ -143,6 +172,9 @@ function checkKeyUp(e){
   else if(e.keyCode === 40){
     down = false
   }
+  else if(e.keyCode === 32){
+    blasters = false
+  }
 }
 function endGame(){
   clearInterval(spin)
@@ -155,4 +187,12 @@ function endGame(){
   timeOut = setTimeout(()=>{
     window.location.href = "lose.html"
   },1000)
+}
+
+function fireBlasters(){
+  blasters = true
+  bullets.y = camera.y + ((wing.y+60)/160)*(.015) - .005
+  bullets.x = 999950
+  bullets.z = camera.z + ((wing.x+90)/160)*(0.015) - .005
+  bullets.width = .01
 }
